@@ -12,9 +12,9 @@ import com.twitter.scalding._
  * NGrams (see http://en.wikipedia.org/wiki/N-gram), including context NGrams,
  * where some of the words are fixed, 
  * such as a prefix string 
- * You invoke the script like this:
+ * You invoke the script inside sbt like this:
  *
- *   sbt NGrams --count 20 --ngrams "I love % %" --input data/kjvdat.txt --output output/kjv-ngrams.txt
+ *   scalding NGrams --count 20 --ngrams "I love % %" --input data/kjvdat.txt --output output/kjv-ngrams.txt
  *
  * The "ngrams" phrase allows optional prefixes, like the "I love" shown here
  * and "%" placeholders for each additional word that should be matched. 

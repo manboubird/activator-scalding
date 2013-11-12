@@ -9,9 +9,9 @@ import com.twitter.scalding._
  * 3. How to find unique values (like SQL's "DISTINCT").
  * 4. How to count all records (like SQL's "COUNT(*)").
  * 5. How to limit output (like SQL's "LIMIT n" clause).
- * You invoke the script like this:
+ * You invoke the script inside sbt like this:
  *
- *   sbt FilterUniqueCountLimit --input data/kjvdat.txt --output output/kjv
+ *   scalding FilterUniqueCountLimit --input data/kjvdat.txt --output output/kjv
  *
  * In this case, the output is used as a prefix for 3 output files.
  * (Use any output value you want.)

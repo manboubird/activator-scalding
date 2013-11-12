@@ -11,9 +11,9 @@ import com.twitter.scalding._
  * This example implements the (in)famous "hello world!" of Hadoop programming,
  * "Word Count", where a corpus of documents is read, the contents are tokenized
  * into words, and the total count for each word over the entire corpus is computed.
- * You invoke the script like this:
+ * You invoke the script inside sbt like this:
  *
- *   sbt WordCount --input data/kjvdat.txt --output output/kjv-wc.txt
+ *   scalding WordCount --input data/kjvdat.txt --output output/kjv-wc.txt
  *
  * where the --input and --output arguments specify the location of an input file to
  * be read (a text file of the King James Version of the Bible, in this case) and where

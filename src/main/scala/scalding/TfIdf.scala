@@ -10,23 +10,23 @@ import com.twitter.scalding.mathematics.Matrix
  * TfIdf
  *
  * In a conventional implementation of term frequency/inverse document frequency,
- * you might load a document to word matrix: 
+ * you might load a precomputed document to word matrix: 
  *   a[i,j] = freq of the word j in the document i 
  * Then compute the Tf-Idf score of each word w.r.t. to each document.
- * Here, we'll compute this matrix using our KJV Bible data, then convert it a
+ * Here, we'll compute this matrix using our KJV Bible data, then convert to a
  * matrix and proceed from there.
  * We'll keep the top N words in each document, See
  * http://en.wikipedia.org/wiki/Tf*idf for more info on this algorithm.
  * 
- * You invoke the script like this:
+ * You invoke the script inside sbt like this:
  *
- *   sbt TfIdf --n 100 --input data/kjvdat.txt --output output/kjv-tfidf.txt
+ *   scalding TfIdf --n 100 --input data/kjvdat.txt --output output/kjv-tfidf.txt
  *
  * The --n argument is optional; it defaults to 100.
  */
 class TfIdf(args : Args) extends Job(args) {
   
-  val n = args.getOrElse("nWords", "100").toInt 
+  val n = args.getOrElse("n", "100").toInt 
 
   // In the Bible data file, each line has four, "|"-delimited fields:
   // 1. The book of the Bible, e.g., Genesis (abbreviated "Gen").
@@ -54,106 +54,9 @@ class TfIdf(args : Args) extends Job(args) {
     "Num", "Oba", "Pe1", "Pe2", "Phi", "Plm", "Pro", "Psa", "Rev", 
     "Rom", "Rut", "Sa1", "Sa2", "Sol", "Th1", "Th2", "Ti1", "Ti2",
     "Tit", "Zac", "Zep")
-
-  // Almost a third of these books are aprocryphal, and hence aren't in the KJV.
-  val bookAbbrevsToNames = Map(
-    "Act" -> "Acts", 
-    "Aes" -> "Additions to Esther", 
-    "Amo" -> "Amos", 
-    "Aza" -> "Prayer of Azariah", 
-    "Bar" -> "Baruch", 
-    "Bel" -> "Bel and the Dragon", 
-    "Bet" -> "Bel and the Dragon Th", 
-    "Ch1" -> "1 Chronicles", 
-    "Ch2" -> "2 Chronicles", 
-    "Co1" -> "1 Corinthians", 
-    "Co2" -> "2 Corinthians", 
-    "Col" -> "Colossians", 
-    "Dan" -> "Daniel", 
-    "Dat" -> "Daniel Th", 
-    "Deu" -> "Deuteronomy",
-    "Ecc" -> "Ecclesiastes", 
-    "Eph" -> "Ephesians", 
-    "Epj" -> "Epistle of Jeremiah", 
-    "Es1" -> "1 Esdras", 
-    "Es2" -> "2 Esdras", 
-    "Est" -> "Esther", 
-    "Exo" -> "Exodus",
-    "Eze" -> "Ezekiel", 
-    "Ezr" -> "Ezra", 
-    "Gal" -> "Galatians", 
-    "Gen" -> "Genesis",
-    "Hab" -> "Habakkuk", 
-    "Hag" -> "Haggai", 
-    "Heb" -> "Hebrews", 
-    "Hos" -> "Hosea", 
-    "Isa" -> "Isaiah", 
-    "Jam" -> "James", 
-    "Jda" -> "Judges A", 
-    "Jdb" -> "Judges B", 
-    "Jde" -> "Jude", 
-    "Jdg" -> "Judges",
-    "Jdt" -> "Judith", 
-    "Jer" -> "Jeremiah", 
-    "Jo1" -> "1 John", 
-    "Jo2" -> "2 John", 
-    "Jo3" -> "3 John", 
-    "Job" -> "Job", 
-    "Joe" -> "Joel", 
-    "Joh" -> "John", 
-    "Jon" -> "Jonah", 
-    "Jos" -> "Joshua",
-    "Jsa" -> "Joshua A", 
-    "Jsb" -> "Joshua B", 
-    "Kg1" -> "1 Kings", 
-    "Kg2" -> "2 Kings", 
-    "Lam" -> "Lamentations", 
-    "Lao" -> "Laodiceans", 
-    "Lev" -> "Leviticus",
-    "Luk" -> "Luke", 
-    "Ma1" -> "1 Macabees", 
-    "Ma2" -> "2 Macabees", 
-    "Ma3" -> "3 Macabees", 
-    "Ma4" -> "4 Macabees", 
-    "Mal" -> "Malachi", 
-    "Man" -> "Prayer of Manasseh", 
-    "Mar" -> "Mark", 
-    "Mat" -> "Matthew", 
-    "Mic" -> "Micah", 
-    "Nah" -> "Nahum", 
-    "Neh" -> "Nehemiah", 
-    "Num" -> "Numbers",
-    "Oba" -> "Obadiah", 
-    "Ode" -> "Odes", 
-    "Pe1" -> "1 Peter", 
-    "Pe2" -> "2 Peter", 
-    "Phi" -> "Philippians", 
-    "Plm" -> "Philemon", 
-    "Pro" -> "Proverbs", 
-    "Psa" -> "Psalms", 
-    "Pss" -> "Psalms of Solomon", 
-    "Rev" -> "Revelation",
-    "Rom" -> "Romans", 
-    "Rut" -> "Ruth", 
-    "Sa1" -> "1 Samuel", 
-    "Sa2" -> "2 Samuel", 
-    "Sir" -> "Sirach", 
-    "Sol" -> "Song of Solomon", 
-    "Sus" -> "Susanna", 
-    "Sut" -> "Susanna Th", 
-    "Th1" -> "1 Thessalonians", 
-    "Th2" -> "2 Thessalonians", 
-    "Ti1" -> "1 Timothy", 
-    "Ti2" -> "2 Timothy", 
-    "Tit" -> "Titus", 
-    "Toa" -> "Tobit BA", 
-    "Tob" -> "Tobias", 
-    "Tos" -> "Tobit S", 
-    "Wis" -> "Wisdom", 
-    "Zac" -> "Zechariah", 
-    "Zep" -> "Zephaniah") 
-
-   val booksToIndex = books.zipWithIndex.toMap
+  
+  val booksToIndex = books.zipWithIndex.toMap
+  
   val byBookWordCount = Csv(args("input"), separator = "|", fields = kjvSchema)
     .read
     .flatMap('text -> 'word) {
@@ -190,13 +93,42 @@ class TfIdf(args : Args) extends Job(args) {
   // Multiply the term frequency with the inverse document frequency
   // and keep the top N words. "hProd" is the Hadamard product, i.e.,
   // multiplying elementwise, rather than row vector times column vector.
-  // Finally, before writing the output, convert the matrix back to a
-  // Cascading pipe and replace the bookId with the full name.
-  docWordMatrix.hProd(invDocFreqMat).topRowElems(n)
+  // Next, before writing the output, convert the matrix back to a
+  // Cascading pipe and replace the bookId with the abbreviated name.
+  // Note the "mapTo"; it's like map, but the later keeps all the original
+  // input fields and adds the new one(s) output from map. MapTo tosses all
+  // the fields not passed in. It's more efficient than map(...).project(...),
+  // which would be functionally equivalent.
+  val out1 = docWordMatrix.hProd(invDocFreqMat).topRowElems(n)
     .pipeAs(('bookId, 'word, 'frequency))
     .mapTo(('bookId, 'word, 'frequency) -> ('book, 'word, 'frequency)){
-      tri: (Int,String,Double) => (bookAbbrevsToNames(books(tri._1)), tri._2, tri._3)
+      tri: (Int,String,Double) => (books(tri._1), tri._2, tri._3)
     }
+
+  // Finally, before writing the output, let's see how joins work, which 
+  // we'll use to bring in a table of the book abbreviations and the full names.
+  // Note that almost a third of these books in that data set are aprocryphal 
+  // and hence aren't in the KJV.
+  // This data is tab-delimited and we'll just hard code a default path to it
+  // unless you use the option we didn't document above!
+  val abbrevToNameFile = args.getOrElse("abbrevs-to-names", "data/abbrevs-to-names.tsv")
+  val abbrevToName = Tsv(abbrevToNameFile, fields = ('abbrev, 'name)).read
+
+  // The "tiny" file is the abbreviations. Knowing which one is smallest is 
+  // important, because Cascading can use a optimization known as a map-side 
+  // join. In short, if the small data set can fit in memory, that data can
+  // be cached in the "map" process memory and the join can be performed as
+  // the larger data set streams through. See this description for Hive, 
+  // which implements the optimization, too: 
+  // https://cwiki.apache.org/confluence/display/Hive/LanguageManual+JoinOptimization#LanguageManualJoinOptimization-PriorSupportforMAPJOIN)
+  // The pair tuple passed to the inner join method "joinWithTiny" lists one 
+  // or more fields from the left-hand table and one or more fields from the
+  // right-hand table (a matching number is required!) to join on. Here, we
+  // just join on field. If it were two, we would pass an argument like
+  // (('l1, l2') -> ('r1, 'r2)).
+  // After joining, we do a final projection and then write the output.
+  out1.joinWithTiny('book -> 'abbrev, abbrevToName)
+    .project('name, 'word, 'frequency)
     .write(Tsv(args("output")))
 
   def log2(x : Double) = scala.math.log(x)/scala.math.log(2.0)
