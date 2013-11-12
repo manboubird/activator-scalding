@@ -14,7 +14,8 @@ If you want to run any of these scripts in a Hadoop cluster, you'll need to buil
 
 ### Running Locally with SBT
 
-Start `sbt` and 
+Start `sbt`. At the prompt, run the task `scalding`. You'll see a multi-line error message like the following that lists the available scripts:
+
 
 The commands should run without error. The `sbt assembly` command first runs an `update` task, which downloads all the dependencies, using the specification in `project/Build.scala`. You'll see lots of messages as it tries different repositories. Note that these dependencies will be downloaded to your `$HOME/.ivy2` directory (on *nix systems). **This may take a while to run!!**
 
