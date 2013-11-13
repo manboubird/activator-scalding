@@ -1,5 +1,3 @@
-// This SBT build file adapted from https://github.com/deanwampler/scalding-workshop.
-
 import sbt._
 import sbt.Keys._
 

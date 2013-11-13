@@ -162,3 +162,6 @@ This template is not a complete Scalding tutorial. To learn more, see the follow
 * The Scalding [Wiki](https://github.com/twitter/scalding/wiki). 
 * The Scalding [tutorial](https://github.com/twitter/scalding/tree/develop/tutorial) distributed with the [Scalding](https://github.com/twitter/scalding) distribution. 
 * Dean Wampler's [Scalding Workshop](https://github.com/deanwampler/scalding-workshop), from which some of this material was adapted.
+* See [Typesafe](http://typesafe.com) for more information about our products and services. 
+* See [Typesafe Activator](http://typesafe.com/activator) to find other Activator templates.
+
