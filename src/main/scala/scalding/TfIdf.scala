@@ -12,7 +12,7 @@ import com.twitter.scalding.mathematics.Matrix
  * In a conventional implementation of term frequency/inverse document frequency,
  * you might load a precomputed document to word matrix: 
  *   a[i,j] = freq of the word j in the document i 
- * Then compute the Tf-Idf score of each word w.r.t. to each document.
+ * Then compute the Tf-Idf score of each word w.r.t. each document.
  * Here, we'll compute this matrix using our KJV Bible data, then convert to a
  * matrix and proceed from there.
  * We'll keep the top N words in each document, See

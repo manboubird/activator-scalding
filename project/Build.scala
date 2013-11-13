@@ -28,10 +28,11 @@ object BuildSettings {
   lazy val sbtAssemblySettings = assemblySettings ++ Seq(
 
     // Slightly cleaner jar name
-    jarName in assembly := s"${name}-${version}.jar"  ,
+    jarName in assembly := s"${name.value}-${version.value}.jar"  ,
     
     // Drop these jars, most of which are dependencies of dependencies and already exist
-    // in Hadoop deployments or aren't needed for local mode execution.
+    // in Hadoop deployments or aren't needed for local mode execution. Some are older
+    // versions of jars that collide with newer versions in the dependency graph!!
     excludedJars in assembly <<= (fullClasspath in assembly) map { cp =>
       val excludes = Set(
         "scala-compiler.jar",
@@ -41,7 +42,9 @@ object BuildSettings {
         "minlog-1.2.jar", // Otherwise causes conflicts with Kyro (which Scalding pulls in)
         "janino-2.5.16.jar", // Janino includes a broken signature, and is not needed anyway
         "commons-beanutils-core-1.8.0.jar", // Clash with each other and with commons-collections
-        "commons-beanutils-1.7.0.jar"
+        "commons-beanutils-1.7.0.jar",
+        "stax-api-1.0.1.jar",
+        "asm-3.1.jar"
       ) 
       cp filter { jar => excludes(jar.data.getName) }
     },

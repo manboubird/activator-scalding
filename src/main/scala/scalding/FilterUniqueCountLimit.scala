@@ -13,8 +13,8 @@ import com.twitter.scalding._
  *
  *   scalding FilterUniqueCountLimit --input data/kjvdat.txt --output output/kjv
  *
- * In this case, the output is used as a prefix for 3 output files.
- * (Use any output value you want.)
+ * In this case, the --output is actually used as a prefix for 4 output files, 
+ * the results of numbers 2-5 above. (Use any output value you want.)
  */
 
 class FilterUniqueCountLimit(args : Args) extends Job(args) {

@@ -21,6 +21,8 @@ import com.twitter.scalding._
  * In this example, 4-grams starting with "I love" will be found. One or more "%"
  * can appear anywhere in the string and all whitespace will be replaced a 
  * regular expression to match any whitespace.
+ * NOTE: The string is used as a regular expression, so additional regular expression
+ * constructs can be used, e.g., "loves?" will match "love" and "loves".
  * The "count" flag means "show the top i most frequent matching ngrams", 
  * where i defaults to 20.
  * Try different ngram phrases and values of count. Try different data sources.
