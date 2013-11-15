@@ -171,9 +171,12 @@ sup {
 
 <p>Unlike most Activator templates, we compile our scripts, but we don't test the code in the typical way. Instead, we run the scripts with a custom SBT task named <code>scalding</code>, as we'll see.</p>
 
-<p>If you want to run any of these scripts in a Hadoop cluster, you'll need to build an all-inclusive "assembly" that contains the contents of most of the dependent jars. That way you have just one jar to deploy to the Hadoop cluster. See the <strong>Running on Hadoop</strong> section below for more details.</p>
+<p>If you want to run any of these scripts in a Hadoop cluster, you'll need to build an all-inclusive "assembly" that contains the contents of most of the dependent jars. That way you have just one jar to deploy to the Hadoop cluster. See the <strong>Running on Hadoop</strong> section later for more details.</p>
 
-<h3>Running Locally with SBT</h3>
+</div>
+
+<div>
+<h2>Running Locally with SBT</h2>
 
 <p>Start <code>sbt</code>. At the prompt, run the task <code>scalding</code>. You'll see a multi-line error message like the following that lists the available scripts:</p>
 
@@ -193,7 +196,10 @@ sup {
 
 <p><strong>NOTE:</strong> The first time run any of the following <code>scalding</code> tasks, <code>sbt</code> will download the dependencies and compile the code. The compilation should go quickly, but the dependencies download can take a while.</p>
 
-<h4>WordCount</h4>
+</div>
+
+<div>
+<h2>WordCount</h2>
 
 <p>This script implements the well-known <em>Word Count</em> algorithm, which is popular as an easy-to-implement, "hello world!" program in Hadoop circles.</p>
 
@@ -220,7 +226,10 @@ sup {
 
 <p>The <code>--output</code> argument specifies where the results are written. You just see a few log messages written to the <code>sbt</code> console. You can use any path you want for this output.</p>
 
-<h4>FilterUniqueCountLimit</h4>
+</div>
+
+<div>
+<h2>FilterUniqueCountLimit</h2>
 
 <p>This example shows a few techniques:</p>
 
@@ -265,7 +274,10 @@ sup {
 
 <p>This example also uses the <code>debug</code> pipe to dump output to the console. In this case, you'll see the same output that gets written to the output file, which is the list of the ngrams and their frequencies, sorted by frequency descending.</p>
 
-<h4>TfIdf</h4>
+</div>
+
+<div>
+<h2>TfIdf</h2>
 
 <p>The most complex example implements the <em>term frequency/inverse document frequecy</em> algorithm used as part of search indexing, e.g., for the Web. (See <a href="http://en.wikipedia.org/wiki/Tf*idf">here</a> for more info on this algorithm.)</p>
 
@@ -285,7 +297,10 @@ sup {
 
 <p>The <code>--n</code> argument is optional; it defaults to 100. It specifies how many words to keep for each document.</p>
 
-<h3>Running on Hadoop</h3>
+</div>
+
+<div>
+<h2>Running on Hadoop</h2>
 
 <p>After testing your scripts, you can run them on a Hadoop cluster. You'll first need to build an all-inclusive jar file that contains all the dependencies, including the scala standard library, that aren't already on the cluster.</p>
 
@@ -307,6 +322,7 @@ sup {
 </code></pre>
 
 <p>Note that when using HDFS, Hadoop treats all paths as <em>directories</em>. So, all the files in an <code>--input</code> directory will be read. In <code>--local</code> mode, the paths are interpreted as <em>files</em>.</p>
+
 </div>
 
 <div>

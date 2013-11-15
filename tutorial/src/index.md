@@ -10,9 +10,9 @@ This template demonstrates how to build [Scalding](https://github.com/twitter/sc
 
 Unlike most Activator templates, we compile our scripts, but we don't test the code in the typical way. Instead, we run the scripts with a custom SBT task named `scalding`, as we'll see.
 
-If you want to run any of these scripts in a Hadoop cluster, you'll need to build an all-inclusive "assembly" that contains the contents of most of the dependent jars. That way you have just one jar to deploy to the Hadoop cluster. See the **Running on Hadoop** section below for more details.
+If you want to run any of these scripts in a Hadoop cluster, you'll need to build an all-inclusive "assembly" that contains the contents of most of the dependent jars. That way you have just one jar to deploy to the Hadoop cluster. See the **Running on Hadoop** section later for more details.
 
-### Running Locally with SBT
+## Running Locally with SBT
 
 Start `sbt`. At the prompt, run the task `scalding`. You'll see a multi-line error message like the following that lists the available scripts:
 
@@ -33,7 +33,7 @@ Let's look at each example. Note that all the scripts are in `src/main/scala/sca
 
 **NOTE:** The first time run any of the following `scalding` tasks, `sbt` will download the dependencies and compile the code. The compilation should go quickly, but the dependencies download can take a while.
 
-#### WordCount
+## WordCount
 
 This script implements the well-known *Word Count* algorithm, which is popular as an easy-to-implement, "hello world!" program in Hadoop circles.
 
@@ -64,7 +64,7 @@ We just treat the whole line as text. A nice exercise is to *project* out just t
 The `--output` argument specifies where the results are written. You just see a few log messages written to the `sbt` console. You can use any path you want for this output.
 
 
-#### FilterUniqueCountLimit
+## FilterUniqueCountLimit
 
 This example shows a few techniques:
 
@@ -108,7 +108,7 @@ Try different ngram phrases and values of count. Try different data sources.
 
 This example also uses the `debug` pipe to dump output to the console. In this case, you'll see the same output that gets written to the output file, which is the list of the ngrams and their frequencies, sorted by frequency descending.
 
-#### TfIdf
+## TfIdf
 
 The most complex example implements the *term frequency/inverse document frequecy* algorithm used as part of search indexing, e.g., for the Web. (See [here](http://en.wikipedia.org/wiki/Tf*idf) for more info on this algorithm.)
 
@@ -130,7 +130,7 @@ scalding TfIdf --n 100 --input data/kjvdat.txt --output output/kjv-tfidf.txt
 
 The `--n` argument is optional; it defaults to 100. It specifies how many words to keep for each document. 
 
-### Running on Hadoop
+## Running on Hadoop
 
 After testing your scripts, you can run them on a Hadoop cluster. You'll first need to build an all-inclusive jar file that contains all the dependencies, including the scala standard library, that aren't already on the cluster.
 
