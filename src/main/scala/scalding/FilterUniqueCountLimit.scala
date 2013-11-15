@@ -11,10 +11,12 @@ import com.twitter.scalding._
  * 5. How to limit output (like SQL's "LIMIT n" clause).
  * You invoke the script inside sbt like this:
  *
- *   scalding FilterUniqueCountLimit --input data/kjvdat.txt --output output/kjv
+ *   scalding FilterUniqueCountLimit --input data/kjvdat.txt --output output/kjv --n 1000
  *
  * In this case, the --output is actually used as a prefix for 4 output files, 
  * the results of numbers 2-5 above. (Use any output value you want.)
+ * The "--n N" is optional; it is used for the last case, the LIMIT n result 
+ * and n defaults to 1000
  */
 
 class FilterUniqueCountLimit(args : Args) extends Job(args) {
@@ -62,6 +64,6 @@ class FilterUniqueCountLimit(args : Args) extends Job(args) {
 
   // Yet another split used to implement "LIMIT N".
   new RichPipe(bible)
-      .limit(1000)
-      .write(Tsv(s"$outputPrefix-limit-N.txt"))  
+      .limit(args.getOrElse("n", "1000").toInt)
+      .write(Csv(s"$outputPrefix-limit-N.txt", separator = "|"))
 }
