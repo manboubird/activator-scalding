@@ -42,7 +42,8 @@ object BuildSettings {
         "commons-beanutils-core-1.8.0.jar", // Clash with each other and with commons-collections
         "commons-beanutils-1.7.0.jar",
         "stax-api-1.0.1.jar",
-        "asm-3.1.jar"
+        "asm-3.1.jar",
+        "scalatest-2.0.jar"
       ) 
       cp filter { jar => excludes(jar.data.getName) }
     },
@@ -73,9 +74,10 @@ object Resolvers {
 
 object Dependency {
   object Version {
-    val Scalding = "0.9.0rc4"
-    val Algebird = "0.2.0"
-    val Hadoop   = "1.1.2"  // Fairly old, but reliable version. Substitute your "favorite"
+    val Scalding  = "0.9.0rc4"
+    val Algebird  = "0.2.0"
+    val Hadoop    = "1.1.2"  // Fairly old, but reliable version. Substitute your "favorite"
+    val ScalaTest = "2.0"
   }
 
   // ---- Application dependencies ----
@@ -90,6 +92,8 @@ object Dependency {
   val algebird_util  = "com.twitter"    %% "algebird-util"  % Version.Algebird
 
   val hadoop_core    = "org.apache.hadoop" % "hadoop-core"  % Version.Hadoop
+
+  val scalaTest      = "org.scalatest"     % "scalatest_2.10" % Version.ScalaTest %  "test" 
 }
 
 object Dependencies {
@@ -97,7 +101,7 @@ object Dependencies {
 
   val activatorscalding = Seq(
     scalaCompiler, scalding_args, scalding_core, scalding_date, 
-    algebird_core, algebird_util, hadoop_core)
+    algebird_core, algebird_util, hadoop_core, scalaTest)
 }
 
 object ActivatorScaldingBuild extends Build {

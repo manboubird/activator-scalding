@@ -169,9 +169,13 @@ sup {
 <div>
 <h2>Building and Running</h2>
 
-<p>Unlike most Activator templates, we compile our scripts, but we don't test the code in the typical way. Instead, we run the scripts with a custom SBT task named <code>scalding</code>, as we'll see.</p>
+<p>Like most Activator templates, we compile and test our Scalding scripts as Scala classes, but we don't run the code in the usual way. Instead, we run the scripts with a custom SBT task named <code>scalding</code>, as we'll see.</p>
 
-<p>If you want to run any of these scripts in a Hadoop cluster, you'll need to build an all-inclusive "assembly" that contains the contents of most of the dependent jars. That way you have just one jar to deploy to the Hadoop cluster. See the <strong>Running on Hadoop</strong> section later for more details.</p>
+<p>So, start by running the SBT <code>test</code> task, which will first compile the code:</p>
+
+<pre><code>sbt test</code></pre>
+
+<p>Also, if you want to run any of these scripts in a Hadoop cluster, you'll need to build an all-inclusive "assembly" that contains the contents of most of the dependent jars. That way you have just one jar to deploy to the Hadoop cluster. See the <strong>Running on Hadoop</strong> section later for more details.</p>
 
 </div>
 

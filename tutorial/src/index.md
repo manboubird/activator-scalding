@@ -8,9 +8,15 @@ This template demonstrates how to build [Scalding](https://github.com/twitter/sc
 
 ## Building and Running
 
-Unlike most Activator templates, we compile our scripts, but we don't test the code in the typical way. Instead, we run the scripts with a custom SBT task named `scalding`, as we'll see.
+Like most Activator templates, we compile and test our Scalding scripts as Scala classes, but we don't run the code in the usual way. Instead, we run the scripts with a custom SBT task named `scalding`, as we'll see.
 
-If you want to run any of these scripts in a Hadoop cluster, you'll need to build an all-inclusive "assembly" that contains the contents of most of the dependent jars. That way you have just one jar to deploy to the Hadoop cluster. See the **Running on Hadoop** section later for more details.
+So, start by running the SBT `test` task, which will first compile the code:
+
+```
+sbt test
+```
+
+Also, if you want to run any of these scripts in a Hadoop cluster, you'll need to build an all-inclusive "assembly" that contains the contents of most of the dependent jars. That way you have just one jar to deploy to the Hadoop cluster. See the **Running on Hadoop** section later for more details.
 
 ## Running Locally with SBT
 
