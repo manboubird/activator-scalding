@@ -158,12 +158,15 @@ sup {
 <body>
 <h1>Activator Scalding Template</h1>
 
+<div>
 <h2>Explore Scalding</h2>
 
 <p>This template demonstrates how to build <a href="https://github.com/twitter/scalding">Scalding</a>-based <em>Big Data</em> applications, which can run "locally" on your personal machine or on a <a href="http://hadoop.apache.org">Hadoop</a> cluster. Actually, these "applications" are more like "scripts".</p>
 
 <p><a href="https://github.com/twitter/scalding">Scalding</a> is a Scala API developed at Twitter for distributed data programming that sits on top of the <a href="http://www.cascading.org/">Cascading</a> Java API, which in turn sits on top of Hadoop's Java API. However, through Cascading, Scalding also offers a <em>local</em> mode that makes it easy to run jobs without Hadoop. This greatly simplifies and accelerates learning and testing of applications. It's even "good enough" for small data sets that fit easily on a single machine.</p>
+</div>
 
+<div>
 <h2>Building and Running</h2>
 
 <p>Unlike most Activator templates, we compile our scripts, but we don't test the code in the typical way. Instead, we run the scripts with a custom SBT task named <code>scalding</code>, as we'll see.</p>
@@ -304,7 +307,9 @@ sup {
 </code></pre>
 
 <p>Note that when using HDFS, Hadoop treats all paths as <em>directories</em>. So, all the files in an <code>--input</code> directory will be read. In <code>--local</code> mode, the paths are interpreted as <em>files</em>.</p>
+</div>
 
+<div>
 <h2>Next Steps</h2>
 
 <p>This template is not a complete Scalding tutorial. To learn more, see the following:</p>
