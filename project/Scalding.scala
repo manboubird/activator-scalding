@@ -25,7 +25,9 @@ object Scalding {
     } else {
       // Find the available scripts and build a help message.
       log.error("Please specify one of the following commands (example arguments shown):")
-      val scriptCmds = (sources in Compile).value.map(file => extractCommand(file))
+      val scriptCmds = (sources in Compile).value
+        .filter(file => rootName(file).endsWith("Main") == false)
+        .map(file => extractCommand(file))
       scriptCmds foreach (s => log.error(s"  $s"))
       log.error("scalding requires arguments.")
     }
@@ -43,9 +45,13 @@ object Scalding {
   private def extractCommand(file: File): String = 
     scala.io.Source.fromFile(file).getLines.find(_.matches("""^\s+\*\s+scalding\s+.*$""")) match {
       case None => 
-        val fname = file.getName
-        val name = fname.substring(fname.lastIndexOf("/")+1, fname.lastIndexOf("."))
+        val name = rootName(file)
         s"scalding $name [arguments] (see the source file for details)"
       case Some(s) => s.replaceAll("""^\s+\*\s+""", "")
     }
+
+  private def rootName(file: File) = {
+    val fname = file.getName
+    fname.substring(fname.lastIndexOf("/")+1, fname.lastIndexOf("."))
+  }
 }

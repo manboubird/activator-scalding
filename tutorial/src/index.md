@@ -8,7 +8,7 @@ This template demonstrates how to build [Scalding](https://github.com/twitter/sc
 
 ## Building and Running
 
-Like most Activator templates, we compile and test our Scalding scripts as Scala classes, but we don't run the code in the usual way. Instead, we run the scripts with a custom SBT task named `scalding`, as we'll see.
+Like most Activator templates, we compile, test, and run our Scalding scripts as Scala classes. However, the run command executes one of the four provided examples, *NGrams*, with a fixed set of arguments. To run all the examples and vary the arguments, we use a custom SBT task named <code>scalding</code>, as we'll see.
 
 So, start by running the SBT `test` task, which will first compile the code:
 
@@ -20,7 +20,9 @@ Also, if you want to run any of these scripts in a Hadoop cluster, you'll need t
 
 ## Running Locally with SBT
 
-Start `sbt`. At the prompt, run the task `scalding`. You'll see a multi-line error message like the following that lists the available scripts:
+Start `sbt`. At the prompt, invoked the `run` task, which calculates all the 4-grams (4-word phrases) in the King James Version of the Bible of the form "% love % %", where the "%" are wild cards. In other words, all 4-grams are found with "love" as the second word.
+
+To run all the examples, with the ability to vary the input arguments, use the `scalding` task. At the `sbt` prompt, run the task `scalding`. You'll see a multi-line error message like following tlists the available scripts:
 
 ```
 [error] Please specify one of the following commands (example arguments shown):

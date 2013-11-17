@@ -169,7 +169,7 @@ sup {
 <div>
 <h2>Building and Running</h2>
 
-<p>Like most Activator templates, we compile and test our Scalding scripts as Scala classes, but we don't run the code in the usual way. Instead, we run the scripts with a custom SBT task named <code>scalding</code>, as we'll see.</p>
+<p>Like most Activator templates, we compile, test, and run our Scalding scripts as Scala classes. However, the run command executes one of the four provided examples, <em>NGrams</em>, with a fixed set of arguments. To run all the examples and vary the arguments, we use a custom SBT task named <code>scalding</code>, as we'll see.</p>
 
 <p>So, start by running the SBT <code>test</code> task, which will first compile the code:</p>
 
@@ -182,7 +182,9 @@ sup {
 <div>
 <h2>Running Locally with SBT</h2>
 
-<p>Start <code>sbt</code>. At the prompt, run the task <code>scalding</code>. You'll see a multi-line error message like the following that lists the available scripts:</p>
+<p>Start <code>sbt</code>. At the prompt, invoked the <code>run</code> task, which calculates all the 4-grams (4-word phrases) in the King James Version of the Bible of the form "% love % %", where the "%" are wild cards. In other words, all 4-grams are found with "love" as the second word.
+
+<p>To run all the examples, with the ability to vary the input arguments, use the <code>scalding</code> task. At the <code>sbt</code> prompt, run the task <code>scalding</code>. You'll see a multi-line error message like the following that lists the available scripts:</p>
 
 <pre><code>[error] Please specify one of the following commands (example arguments shown):
 [error]   scalding FilterUniqueCountLimit --input data/kjvdat.txt --output output/kjv
