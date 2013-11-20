@@ -36,20 +36,27 @@ class NGrams(args : Args) extends Job(args) {
   val ngramsArg = args.list("ngrams").mkString(" ").toLowerCase
   // To build the RE, replace all "%" with a word matcher and all spaces 
   // in the input expression with a more general whitespace matcher. 
-  val ngramsRE = ngramsArg.trim.replaceAll("%", """ (\\p{Alnum}+) """).replaceAll("""\s+""", """\\p{Space}+""").r
+  val ngramsRE = ngramsArg.trim
+    .replaceAll("%", """ (\\p{Alnum}+) """)
+    .replaceAll("""\s+""", """\\p{Space}+""").r
   val numberOfNGrams = args.getOrElse("count", "20").toInt
 
   // Used to sort (phrase,count) pairs by the count, descending.
-  val countReverseComparator = (tuple1:(String,Int), tuple2:(String,Int)) => tuple1._2 > tuple2._2
+  val countReverseComparator = 
+    (tuple1:(String,Int), tuple2:(String,Int)) => tuple1._2 > tuple2._2
       
   // This flow adds a debug step, which writes the records to the console.
   // Note that we also need to discard the original input fields, 'offset, and 'line.
   val lines = TextLine(args("input"))
     .read
-    .flatMap('line -> 'ngram) { text: String => ngramsRE.findAllIn(text.trim.toLowerCase).toIterable }
+    .flatMap('line -> 'ngram) { 
+      text: String => ngramsRE.findAllIn(text.trim.toLowerCase).toIterable
+    }
     .discard('offset, 'line)
     .groupBy('ngram) { _.size('count) }
-    .groupAll { _.sortWithTake[(String,Int)](('ngram,'count) -> 'sorted_ngrams, numberOfNGrams)(countReverseComparator) }
+    .groupAll { 
+      _.sortWithTake[(String,Int)](('ngram,'count) -> 'sorted_ngrams, numberOfNGrams)(countReverseComparator)
+    }
     .debug
     .write(Tsv(args("output")))
 }
