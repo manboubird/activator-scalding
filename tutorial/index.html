@@ -159,34 +159,149 @@ sup {
 <h1>Activator Scalding Template</h1>
 
 <div>
+
 <h2>Explore Scalding</h2>
 
-<p>This template demonstrates how to build <a href="https://github.com/twitter/scalding">Scalding</a>-based <em>Big Data</em> applications, which can run "locally" on your personal machine or on a <a href="http://hadoop.apache.org">Hadoop</a> cluster. Actually, these "applications" are more like "scripts".</p>
+<p>This template demonstrates how to build and run <a href="https://github.com/twitter/scalding">Scalding</a>-based <em>Big Data</em> applications for <a href="http://hadoop.apache.org">Hadoop</a>. You can also run them "locally" on your personal machine, which we will do here, for convenient development and testing. Actually, these "applications" are more like "scripts" that traditional, multi-file applications.</p>
 
 <p><a href="https://github.com/twitter/scalding">Scalding</a> is a Scala API developed at Twitter for distributed data programming that sits on top of the <a href="http://www.cascading.org/">Cascading</a> Java API, which in turn sits on top of Hadoop's Java API. However, through Cascading, Scalding also offers a <em>local</em> mode that makes it easy to run jobs without Hadoop. This greatly simplifies and accelerates learning and testing of applications. It's even "good enough" for small data sets that fit easily on a single machine.</p>
+
 </div>
 
 <div>
+
 <h2>Building and Running</h2>
 
-<p>Like most Activator templates, we compile, test, and run our Scalding scripts as Scala classes. However, the run command executes one of the four provided examples, <em>NGrams</em>, with a fixed set of arguments. To run all the examples and vary the arguments, we use a custom SBT task named <code>scalding</code>, as we'll see.</p>
+<p>Invoke the Activator <em>compile</em> and <em>test</em> commands to build the code and run the unit tests. Compiling will take a few minutes as the dependent libraries are downloaded. The tests should pass without error.</p>
 
-<p>So, start by running the SBT <code>test</code> task, which will first compile the code:</p>
-
-<pre><code>sbt test</code></pre>
-
-<p>Also, if you want to run any of these scripts in a Hadoop cluster, you'll need to build an all-inclusive "assembly" that contains the contents of most of the dependent jars. That way you have just one jar to deploy to the Hadoop cluster. See the <strong>Running on Hadoop</strong> section later for more details.</p>
+<p>Now you can invoke <em>run</em> to try it out. An <em>NGram</em> algorithm is used to find all the 4-word ("4-gram") phrases in the King James Version of the Bible of the form "% love % %", where the "%" are wild cards. In other words, all 4-grams are found with "love" as the second word.</p>
 
 </div>
 
 <div>
+
+<h2>The NGram Script</h2>
+
+<p>Let's see how the <em>NGram</em> Script works. In the <em>Code</em> view, navigate to the file <code>src/main/scala/scalding/NGrams.scala</code>. Here is the entire script, with the comments removed:</p>
+
+<pre><code>import com.twitter.scalding._
+
+class NGrams(args : Args) extends Job(args) {
+
+  val ngramsArg = args.list("ngrams").mkString(" ").toLowerCase
+  val ngramsRE = ngramsArg.trim
+    .replaceAll("%", """ (\\p{Alnum}+) """)
+    .replaceAll("""\s+""", """\\p{Space}+""").r
+  val numberOfNGrams = args.getOrElse("count", "20").toInt
+
+  val countReverseComparator = 
+    (tuple1:(String,Int), tuple2:(String,Int)) =&gt; tuple1._2 &gt; tuple2._2
+
+  val lines = TextLine(args("input"))
+    .read
+    .flatMap('line -&gt; 'ngram) { 
+      text: String =&gt; ngramsRE.findAllIn(text.trim.toLowerCase).toIterable 
+    }
+    .discard('offset, 'line)
+    .groupBy('ngram) { _.size('count) }
+    .groupAll { 
+      _.sortWithTake[(String,Int)](
+        ('ngram,'count) -&gt; 'sorted_ngrams, numberOfNGrams)(countReverseComparator)
+    }
+    .debug
+    .write(Tsv(args("output")))
+}
+</code></pre>
+
+<p>Let's walk through this code.</p>
+
+<pre><code>import com.twitter.scalding._
+
+class NGrams(args : Args) extends Job(args) {
+  ...
+</code></pre>
+
+<p>We start with the Scalding imports we need, then declare a class <code>NGrams</code> that subclasses a <code>Job</code> class, which provides a <code>main</code> routine and other runtime context support (such as Hadoop integration). Our class must take a list of command-line arguments, which are processed for us by Scalding's <code>Args</code> class. We'll use these to specify where to find input, where to write output, and handle other configuration options.</p>
+
+<pre><code>  ...
+  val ngramsArg = args.list("ngrams").mkString(" ").toLowerCase
+  val ngramsRE = ngramsArg.trim
+    .replaceAll("%", """ (\\p{Alnum}+) """)
+    .replaceAll("""\s+""", """\\p{Space}+""").r
+  val numberOfNGrams = args.getOrElse("count", "20").toInt
+  ...
+</code></pre>
+
+<p>Before we create our <em>dataflow</em>, a series of <em>pipes</em> that provide data processing, we define a values that we'll need. The user specifies the ngram patterb they want, such as the "% love % %" used in our <em>run</em> example. The <code>ngramsRE</code> takes that ngram specification and turns it into a regular expression that we need. The "%" are converted into patterns to find any word and any runs of whitespace are generalized for all whitespace. Finally, we get the command line argument for the number of most frequently occurring ngrams to find, which defaults to 20 if not specified.</p>
+
+<pre><code>  ...
+  val countReverseComparator = 
+    (tuple1:(String,Int), tuple2:(String,Int)) =&gt; tuple1._2 &gt; tuple2._2
+  ...
+</code></pre>
+
+<p>The <code>countReverseComparator</code> function will be used to rank our found NGrams by frequency of occurrence, descending. The count of occurrences will be the second field in each tuple.</p>
+
+<pre><code>  ...
+  val lines = TextLine(args("input"))
+    .read
+    .flatMap('line -&gt; 'ngram) { 
+      text: String =&gt; ngramsRE.findAllIn(text.trim.toLowerCase).toIterable 
+    }
+    .discard('offset, 'line)
+    ...
+</code></pre>
+
+<p>Now our dataflow is created. A <code>TextLine</code> object is used to read each "record", a line of text as a single "field". Hence, the records are newline (<code>\n</code>) separated. It reads the file specified by the <code>--input</code> argument (processed by the <code>args</code> object).</p>
+
+<p>Note that a flaw with our implementation is that NGrams across line boundaries won't be found, because we process each line separately. However, the text for the King James Version of Bible that we are using has each verse on its own line. It wouldn't make much sense to compute NGrams across verses, so this limitation is not an issue for this particular data set.</p>
+
+<p>Next, we call <code>flatMap</code> on each line record, converting it to zero or more output records, one per NGram found. Of course, some lines won't have a matching NGram. We use our regular expression to tokenize each line, and also trim leading and trailing whitespace and convert to lower case.</p>
+
+<p>A scalding API convention is to use the first argument list to a function to specify the field names to input to the function and name the new fields output. In this case, we input just the line field, named <code>'line</code> (a Scala <em>symbol</em>) and name each found ngram <code>'ngram</code>. Note who these field names are specified using a tuple.</p>
+
+<p>Finally in this section, we discard the fields we no longer need. Operations like <code>flatMap</code> and <code>map</code> append the new fields to the existing fields. We no longer need the <code>'line</code> and <code>TextLine</code> also added a line number field to the input, named <code>'offset</code>.</p>
+
+<pre><code>    ...
+    .groupBy('ngram) { _.size('count) }
+    .groupAll { 
+      _.sortWithTake[(String,Int)](
+        ('ngram,'count) -&gt; 'sorted_ngrams, numberOfNGrams)(countReverseComparator)
+    }
+    ...
+}
+</code></pre>
+
+<p>If we want to rank the found NGrams by their frequencies, we need to get all occurrences of a given NGram together. Hence, we use a <code>groupBy</code> operation to group over the <code>'ngram</code> fields. To sort and output the tope <code>numberOfNGrams</code>, we group <em>all</em> together, then use a special Scalding function that combines sorting with "taking", i.e., just keeping the top N values after sorting.</p>
+
+<pre><code>    ...
+    .debug
+    .write(Tsv(args("output")))
+}
+</code></pre>
+
+<p>The <code>debug</code> function dumps the current stream of data to the console, which is useful for debugging. Don't do this for massive data sets!!</p>
+
+<p>Finally, we write the results as tab-separated values to the location specified by the <code>--output</code> command-line argument.</p>
+
+<p>To recap, look again at the whole listing above. It's not very big! For what it does and compared to typical code bases you might work with, this is incredibly concise and powerful code.</p>
+
+<p>There are additional capabilities built into this template. If you know how to use <a href="http://www.scala-sbt.org/">sbt</a>, the standard Scala build tool, proceed to the next sections of this tutorial for more information.</p>
+
+</div>
+
+<div>
+
 <h2>Running Locally with SBT</h2>
 
-<p>Start <code>sbt</code>. At the prompt, invoked the <code>run</code> task, which calculates all the 4-grams (4-word phrases) in the King James Version of the Bible of the form "% love % %", where the "%" are wild cards. In other words, all 4-grams are found with "love" as the second word.
+<p>Start <code>sbt</code>. At the prompt, invoked the <code>run</code> task, which is the same task that the Activator <em>run</em> command invoked. It calculates all the 4-grams (4-word phrases) in the King James Version of the Bible of the form "% love % %", where the "%" are wild cards. In other words, all 4-grams are found with "love" as the second word.</p>
 
-<p>To run all the examples, with the ability to vary the input arguments, use the <code>scalding</code> task. At the <code>sbt</code> prompt, run the task <code>scalding</code>. You'll see a multi-line error message like the following that lists the available scripts:</p>
+<p>There are three additional Scalding examples in this template. To run all the examples, with the ability to vary the input arguments, use the <code>scalding</code> task included with this project.</p>
 
-<pre><code>[error] Please specify one of the following commands (example arguments shown):
+<p>At the <code>sbt</code> prompt, type <code>scalding</code>. You'll see the following:</p>
+
+<pre><code>&gt; scalding
+[error] Please specify one of the following commands (example arguments shown):
 [error]   scalding FilterUniqueCountLimit --input data/kjvdat.txt --output output/kjv
 [error]   scalding NGrams --count 20 --ngrams "I love % %" --input data/kjvdat.txt --output output/kjv-ngrams.txt
 [error]   scalding TfIdf --n 100 --input data/kjvdat.txt --output output/kjv-tfidf.txt
@@ -194,20 +309,21 @@ sup {
 [error] scalding requires arguments.
 </code></pre>
 
-<p>Hence, without providing any arguments, the <code>scalding</code> command tells you which scripts are available, what arguments they support with examples that will run with supplied data in the <code>data</code> directory. Note that some of the options shown are optional (not indicated); default values will be used. The scripts are listed alphabetically.</p>
+<p>Hence, without providing any arguments, the <code>scalding</code> command tells you which scripts are available and the arguments they support with examples that will run with supplied data in the <code>data</code> directory. Note that some of the options shown are optional (not indicated); default values will be used. The scripts are listed alphabetically and they include the <code>NGrams</code> script that the <code>run</code> task invokes.</p>
 
 <p>Each command should run without error and the output will be written to the file indicated by the <code>--output</code> option. You can change the output location to be anything you want.</p>
 
-<p>Let's look at each example. Note that all the scripts are in <code>src/main/scala/scalding</code>. Each script discussed next will be in a corresponding <code>Foo.scala</code> file and you should look at those files for detailed comments on how they are implemented.</p>
+<p>Let's look at each example. Note that all the scripts are in <code>src/main/scala/scalding</code>. Each script discussed next will be in a corresponding <code>&lt;script-name&gt;.scala</code> file and you should look at those files for detailed comments on how they are implemented.</p>
 
 <p><strong>NOTE:</strong> The first time run any of the following <code>scalding</code> tasks, <code>sbt</code> will download the dependencies and compile the code. The compilation should go quickly, but the dependencies download can take a while.</p>
 
 </div>
 
 <div>
+
 <h2>WordCount</h2>
 
-<p>This script implements the well-known <em>Word Count</em> algorithm, which is popular as an easy-to-implement, "hello world!" program in Hadoop circles.</p>
+<p>The <code>src/main/scala/scalding/WordCount.scala</code> script implements the well-known <em>Word Count</em> algorithm, which is popular as an easy-to-implement, "hello world!" program in Hadoop circles.</p>
 
 <p>In Word Count, a corpus of documents is read, the contents are tokenized into words, and the total count for each word over the entire corpus is computed. The output is sorted by frequency descending.</p>
 
@@ -235,9 +351,10 @@ sup {
 </div>
 
 <div>
+
 <h2>FilterUniqueCountLimit</h2>
 
-<p>This example shows a few techniques:</p>
+<p>The <code>src/main/scala/scalding/FilterUniqueCountLimit.scala</code> script shows a few techniques:</p>
 
 <ol>
 <li>How to split a data stream into several flows, each for a specific calculation.</li>
@@ -255,9 +372,13 @@ sup {
 
 <p>In this case, the <code>--output</code> is actually used as a prefix for 4 output files, the results of numbers 2-5 above.</p>
 
-<h4>NGrams</h4>
+</div>
 
-<p>This (fun) example uses the KJV Bible text to demonstrate how compute <em>NGrams</em>, n-word phrases in a corpus. They are commonly used in natural-language processing applications. (see <a href="http://en.wikipedia.org/wiki/N-gram">here</a> for more details).</p>
+<div>
+
+<h2>NGrams</h2>
+
+<p>We discussed this script before; <code>src/main/scala/scalding/NGrams.scala</code> uses the KJV Bible text to demonstrate how to compute <em>NGrams</em>, n-word phrases in a corpus. They are commonly used in natural-language processing applications. (see <a href="http://en.wikipedia.org/wiki/N-gram">here</a> for more details).</p>
 
 <p>A related concept are <em>Context NGrams</em>, where phrases containing specific words are desired.</p>
 
@@ -283,9 +404,10 @@ sup {
 </div>
 
 <div>
+
 <h2>TfIdf</h2>
 
-<p>The most complex example implements the <em>term frequency/inverse document frequecy</em> algorithm used as part of search indexing, e.g., for the Web. (See <a href="http://en.wikipedia.org/wiki/Tf*idf">here</a> for more info on this algorithm.)</p>
+<p>The <code>src/main/scala/scalding/TfIdf.scala</code> script is the most complex example. It implements the <em>term frequency/inverse document frequecy</em> algorithm used as part of  the indexing process for document or Internet search engines. (See <a href="http://en.wikipedia.org/wiki/Tf*idf">here</a> for more information on this algorithm.)</p>
 
 <p>In a conventional implementation of Tf/Idf, you might load a precomputed document to word matrix:</p>
 
@@ -306,6 +428,7 @@ sup {
 </div>
 
 <div>
+
 <h2>Running on Hadoop</h2>
 
 <p>After testing your scripts, you can run them on a Hadoop cluster. You'll first need to build an all-inclusive jar file that contains all the dependencies, including the scala standard library, that aren't already on the cluster.</p>
@@ -329,9 +452,12 @@ sup {
 
 <p>Note that when using HDFS, Hadoop treats all paths as <em>directories</em>. So, all the files in an <code>--input</code> directory will be read. In <code>--local</code> mode, the paths are interpreted as <em>files</em>.</p>
 
+<p>An alternative to running the <code>hadoop</code> command directly is to use the <code>scald.rb</code> script that comes with Scalding distributions. See the <a href="https://github.com/twitter/scalding">Scalding</a> website for more information.</p>
+
 </div>
 
 <div>
+
 <h2>Next Steps</h2>
 
 <p>This template is not a complete Scalding tutorial. To learn more, see the following:</p>
@@ -343,6 +469,7 @@ sup {
 <li>See <a href="http://typesafe.com">Typesafe</a> for more information about our products and services.</li>
 <li>See <a href="http://typesafe.com/activator">Typesafe Activator</a> to find other Activator templates.</li>
 </ul>
+</div>
 
 </body>
 </html>
