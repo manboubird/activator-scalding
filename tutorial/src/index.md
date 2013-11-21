@@ -10,11 +10,11 @@ This template demonstrates how to build and run [Scalding](https://github.com/tw
 
 Invoke the Activator *compile* and *test* commands to build the code and run the unit tests. Compiling will take a few minutes as the dependent libraries are downloaded. The tests should pass without error.
 
-Now you can invoke *run* to try it out. An *NGram* algorithm is used to find all the 4-word ("4-gram") phrases in the King James Version of the Bible of the form "% love % %", where the "%" are wild cards. In other words, all 4-grams are found with "love" as the second word.
+Now you can invoke *run* to try it out. An *NGrams* algorithm is used to find all the 4-word ("4-gram") phrases in the King James Version of the Bible of the form "% love % %", where the "%" are wild cards. In other words, all 4-grams are found with "love" as the second word.
 
-## The NGram Script
+## The NGrams Script
 
-Let's see how the *NGram* Script works. In the *Code* view, navigate to the file `src/main/scala/scalding/NGrams.scala`. Here is the entire script, with the comments removed:
+Let's see how the *NGrams* Script works. Open <a href="#code/src/main/scala/scalding/NGrams.scala">NGrams.scala</a>. Here is the entire script, with the comments removed:
 
 ```
 import com.twitter.scalding._
@@ -67,7 +67,7 @@ We start with the Scalding imports we need, then declare a class `NGrams` that s
   ...
 ```
 
-Before we create our *dataflow*, a series of *pipes* that provide data processing, we define a values that we'll need. The user specifies the ngram patterb they want, such as the "% love % %" used in our *run* example. The `ngramsRE` takes that ngram specification and turns it into a regular expression that we need. The "%" are converted into patterns to find any word and any runs of whitespace are generalized for all whitespace. Finally, we get the command line argument for the number of most frequently occurring ngrams to find, which defaults to 20 if not specified.
+Before we create our *dataflow*, a series of *pipes* that provide data processing, we define a values that we'll need. The user specifies the NGram pattern they want, such as the "% love % %" used in our *run* example. The `ngramsRE` takes that NGram specification and turns it into a regular expression that we need. The "%" are converted into patterns to find any word and any runs of whitespace are generalized for all whitespace. Finally, we get the command line argument for the number of most frequently occurring NGrams to find, which defaults to 20 if not specified.
 
 ```
   ...
@@ -96,7 +96,7 @@ Note that a flaw with our implementation is that NGrams across line boundaries w
 
 Next, we call `flatMap` on each line record, converting it to zero or more output records, one per NGram found. Of course, some lines won't have a matching NGram. We use our regular expression to tokenize each line, and also trim leading and trailing whitespace and convert to lower case. 
 
-A scalding API convention is to use the first argument list to a function to specify the field names to input to the function and name the new fields output. In this case, we input just the line field, named `'line` (a Scala *symbol*) and name each found ngram `'ngram`. Note who these field names are specified using a tuple.
+A scalding API convention is to use the first argument list to a function to specify the field names to input to the function and name the new fields output. In this case, we input just the line field, named `'line` (a Scala *symbol*) and name each found NGram `'ngram`. Note who these field names are specified using a tuple.
 
 Finally in this section, we discard the fields we no longer need. Operations like `flatMap` and `map` append the new fields to the existing fields. We no longer need the `'line` and `TextLine` also added a line number field to the input, named `'offset`. 
 
@@ -159,7 +159,7 @@ Let's look at each example. Note that all the scripts are in `src/main/scala/sca
 
 ## WordCount
 
-The `src/main/scala/scalding/WordCount.scala` script implements the well-known *Word Count* algorithm, which is popular as an easy-to-implement, "hello world!" program in Hadoop circles.
+Open Open <a href="#code/src/main/scala/scalding/WordCount.scala">WordCount.scala</a>, which implements the well-known *Word Count* algorithm, which is popular as an easy-to-implement, "hello world!" program in Hadoop circles.
 
 In Word Count, a corpus of documents is read, the contents are tokenized into words, and the total count for each word over the entire corpus is computed. The output is sorted by frequency descending.
 
@@ -169,7 +169,7 @@ You invoke the script inside `sbt` like this:
 scalding WordCount --input data/kjvdat.txt --output output/kjv-wc.txt
 ```
 
-The `--input` specifies a file containing the King James Version of the Bible. We have included that file; see the [../data/README](../data/README.html) file for more information.
+The `--input` specifies a file containing the King James Version of the Bible. We have included that file; see the `data/README` file for more information.
 
 Each line actually has the "schema"
 
@@ -190,7 +190,7 @@ The `--output` argument specifies where the results are written. You just see a 
 
 ## FilterUniqueCountLimit
 
-The `src/main/scala/scalding/FilterUniqueCountLimit.scala` script shows a few techniques:
+Open <a href="#code/src/main/scala/scalding/FilterUniqueCountLimit.scala">FilterUniqueCountLimit.scala</a>, which shows a few useful techniques:
 
 1. How to split a data stream into several flows, each for a specific calculation.
 2. How to filter records (like SQL's "WHERE" clause).
@@ -208,7 +208,7 @@ In this case, the `--output` is actually used as a prefix for 4 output files, th
 
 ## NGrams
 
-We discussed this script before; `src/main/scala/scalding/NGrams.scala` uses the KJV Bible text to demonstrate how to compute *NGrams*, n-word phrases in a corpus. They are commonly used in natural-language processing applications. (see [here](http://en.wikipedia.org/wiki/N-gram) for more details).
+We discussed <a href="#code/src/main/scala/scalding/NGrams.scala">NGrams.scala</a> before. It uses the KJV Bible text to demonstrate how to compute *NGrams*, n-word phrases in a corpus. They are commonly used in natural-language processing applications. (see [here](http://en.wikipedia.org/wiki/N-gram) for more details).
 
 A related concept are *Context NGrams*, where phrases containing specific words are desired. 
 
@@ -222,24 +222,24 @@ The `--ngrams` phrase allows optional "context" words, like the "I love" prefix 
 
 The phrase "% love %" will find all 3-grams with the word "love" in the middle, and so forth. The phrase "% % %" will find all 3-grams, period (i.e., without any "context").
 
-The ngram phrase is translated to a regular expression that also replaces the whitespace with a regular expression for arbitrary whitespace.
+The NGram phrase is translated to a regular expression that also replaces the whitespace with a regular expression for arbitrary whitespace.
 
 **NOTE:** In fact, additional regular expression constructs can be used in this string, e.g., `loves?` will match `love` and `loves`. This can be useful or confusing...
 
-The `--count n` flag means "show the top n most frequent matching ngrams". If not specified, it defaults to 20.
+The `--count n` flag means "show the top n most frequent matching NGrams". If not specified, it defaults to 20.
 
-Try different ngram phrases and values of count. Try different data sources.
+Try different NGram phrases and values of count. Try different data sources.
 
-This example also uses the `debug` pipe to dump output to the console. In this case, you'll see the same output that gets written to the output file, which is the list of the ngrams and their frequencies, sorted by frequency descending.
+This example also uses the `debug` pipe to dump output to the console. In this case, you'll see the same output that gets written to the output file, which is the list of the NGrams and their frequencies, sorted by frequency descending.
 
 ## TfIdf
 
-The `src/main/scala/scalding/TfIdf.scala` script is the most complex example. It implements the *term frequency/inverse document frequecy* algorithm used as part of  the indexing process for document or Internet search engines. (See [here](http://en.wikipedia.org/wiki/Tf*idf) for more information on this algorithm.)
+Open <a href="#code/src/main/scala/scalding/TfIdf.scala">TfIdf.scala</a>, our most complex example script. It implements the *term frequency/inverse document frequency* algorithm used as part of  the indexing process for document or Internet search engines. (See [here](http://en.wikipedia.org/wiki/Tf*idf) for more information on this algorithm.)
 
 In a conventional implementation of Tf/Idf, you might load a precomputed document to word matrix: 
 
 ```
-a[i,j] = freq of the word j in the document with index i 
+a[i,j] = frequency of the word j in the document with index i 
 ```
 
 Then, you would compute the Tf/Idf score of each word with respect to each document.
@@ -256,7 +256,7 @@ The `--n` argument is optional; it defaults to 100. It specifies how many words 
 
 ## Running on Hadoop
 
-After testing your scripts, you can run them on a Hadoop cluster. You'll first need to build an all-inclusive jar file that contains all the dependencies, including the scala standard library, that aren't already on the cluster.
+After testing your scripts, you can run them on a Hadoop cluster. You'll first need to build an all-inclusive jar file that contains all the dependencies, including the Scala standard library, that aren't already on the cluster.
 
 The `sbt assembly` command first runs an `update` task, if missing dependencies need to be downloaded. Then the task builds the all-inclusive jar file, which is written to `target/scala-2.10/activator-scalding-X.Y.Z.jar`, where `X.Y.Z` will be the current version number for this project.
 
@@ -281,7 +281,7 @@ Note that when using HDFS, Hadoop treats all paths as *directories*. So, all the
 
 An alternative to running the `hadoop` command directly is to use the `scald.rb` script that comes with Scalding distributions. See the [Scalding](https://github.com/twitter/scalding) website for more information.
 
-## Next Steps
+## Going Forward from Here
 
 This template is not a complete Scalding tutorial. To learn more, see the following:
 
