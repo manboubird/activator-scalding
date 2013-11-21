@@ -64,6 +64,6 @@ class FilterUniqueCountLimit(args : Args) extends Job(args) {
 
   // Yet another split used to implement "LIMIT N".
   new RichPipe(bible)
-      .limit(args.getOrElse("n", "1000").toInt)
+      .limit(args.getOrElse("n", "10").toInt)
       .write(Csv(s"$outputPrefix-limit-N.txt", separator = "|"))
 }

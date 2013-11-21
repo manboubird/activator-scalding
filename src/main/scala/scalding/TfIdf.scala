@@ -122,10 +122,10 @@ class TfIdf(args : Args) extends Job(args) {
   // which implements the optimization, too: 
   // https://cwiki.apache.org/confluence/display/Hive/LanguageManual+JoinOptimization#LanguageManualJoinOptimization-PriorSupportforMAPJOIN)
   // The pair tuple passed to the inner join method "joinWithTiny" lists one 
-  // or more fields from the left-hand table and one or more fields from the
-  // right-hand table (a matching number is required!) to join on. Here, we
-  // just join on field. If it were two, we would pass an argument like
-  // (('l1, l2') -> ('r1, 'r2)).
+  // or more fields from the left-hand pipe and a corresponding number of 
+  // fields from the right-hand pipe to join on. Here, we just join on a
+  // single field from each pipe. If it were two, we would pass an argument 
+  // like (('l1, l2') -> ('r1, 'r2)).
   // After joining, we do a final projection and then write the output.
   out1.joinWithTiny('book -> 'abbrev, abbrevToName)
     .project('name, 'word, 'frequency)
