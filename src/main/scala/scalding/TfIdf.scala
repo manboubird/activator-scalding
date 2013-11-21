@@ -125,7 +125,8 @@ class TfIdf(args : Args) extends Job(args) {
   // or more fields from the left-hand pipe and a corresponding number of 
   // fields from the right-hand pipe to join on. Here, we just join on a
   // single field from each pipe. If it were two, we would pass an argument 
-  // like (('l1, l2') -> ('r1, 'r2)).
+  // like (('l1, l2') -> ('r1, 'r2)). Note the nested tuples within the outer
+  // pair tuple.
   // After joining, we do a final projection and then write the output.
   out1.joinWithTiny('book -> 'abbrev, abbrevToName)
     .project('name, 'word, 'frequency)
