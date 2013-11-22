@@ -10,7 +10,7 @@ This template demonstrates how to build and run [Scalding](https://github.com/tw
 
 Invoke the Activator *compile* and *test* commands to build the code and run the unit tests. Compiling will take a few minutes as the dependent libraries are downloaded. The tests should pass without error.
 
-Now you can invoke *run* to try it out. It runs all four examples provided:
+Now you can invoke *run* to try it out. The default `main` class `RunAll` runs all of the scripts with default arguments. Each script also has its own `main` routine that you can select in the drop-down menu on the Run panel. The four examples provided are these:
 
 * **NGrams:** find all N-word ("N-gram") occurrences matching a pattern. In this case, the 4-word phrases in the King James Version of the Bible of the form "% love % %", where the "%" are wild cards. In other words, all 4-grams are found with "love" as the second word. There are 5 such NGrams.
 * **WordCount:** find all the words in a corpus of documents and count them, again using the KJV.
@@ -19,11 +19,15 @@ Now you can invoke *run* to try it out. It runs all four examples provided:
 
 Each of these scripts writes output to the `output` directory, but for convenience, we echo some of output to the Activator window.
 
-Let's examine these scripts next.
+Let's examine these scripts in more detail...
 
 ## NGrams
 
-Let's see how the *NGrams* Script works. Open <a href="#code/src/main/scala/scalding/NGrams.scala">NGrams.scala</a>. Here is the entire script, with the comments removed:
+Let's see how the *NGrams* Script works. Open <a href="#code/src/main/scala/scalding/NGrams.scala">NGrams.scala</a>. 
+
+In the Run panel, select *NGrams* from the drop-down menu to invoke this script by itself.
+
+Here is the entire script, with the comments removed:
 
 ```
 import com.twitter.scalding._
@@ -151,11 +155,15 @@ Finally, we write the results as tab-separated values to the location specified 
 
 To recap, look again at the whole listing above. It's not very big! For what it does and compared to typical code bases you might work with, this is incredibly concise and powerful code.
 
+*WordCount* is next...
+
 ## WordCount
 
 Open <a href="#code/src/main/scala/scalding/WordCount.scala">WordCount.scala</a>, which implements the well-known *Word Count* algorithm, which is popular as an easy-to-implement, "hello world!" program for developers learning Hadoop.
 
 In *WordCount*, a corpus of documents is read, the contents are tokenized into words, and the total count for each word over the entire corpus is computed. The output is sorted by frequency descending.
+
+In the Run panel, select *WordCount* from the drop-down menu to invoke this script by itself.
 
 Here is the script without comments:
 
@@ -184,6 +192,7 @@ Next, we group over the words, to get all occurrences of each word gathered toge
 
 Finally, we write the output `'word` and `'count` fields as tab-separated values to the location specified with the `--output` argument, as for *NGrams*.
 
+*FilterUniqueCountLimit* is next...
 
 ## FilterUniqueCountLimit
 
@@ -194,6 +203,8 @@ Open <a href="#code/src/main/scala/scalding/FilterUniqueCountLimit.scala">Filter
 3. How to find unique values (like SQL's `DISTINCT` keyword).
 4. How to count all records (like SQL's `COUNT(*)` clause).
 5. How to limit output (like SQL's `LIMIT n` clause).
+
+In the Run panel, select *FilterUniqueCountLimit* from the drop-down menu to invoke this script by itself.
 
 Here is the full script without comments:
 
@@ -239,9 +250,13 @@ The third pipe uses the `groupAll` idiom to collect all records together and cou
 
 The fourth and final pipe limits the number of records to the input value given for the `--n` argument or 10 if the argument isn't specified. Hence, it's output is just the first n lines of the KJV.
 
+*TfIdf* is our last example script...
+
 ## TfIdf
 
 Open <a href="#code/src/main/scala/scalding/TfIdf.scala">TfIdf.scala</a>, our most complex example script. It implements the *term frequency-inverse document frequency* algorithm used as part of  the indexing process for document or Internet search engines. (See [here](http://en.wikipedia.org/wiki/Tf*idf) for more information on this algorithm.)
+
+In the Run panel, select *TfIdf* from the drop-down menu to invoke this script by itself.
 
 In a conventional implementation of Tf-Idf, you might load a precomputed document to word matrix: 
 

@@ -67,3 +67,32 @@ class FilterUniqueCountLimit(args : Args) extends Job(args) {
       .limit(args.getOrElse("n", "10").toInt)
       .write(Csv(s"$outputPrefix-limit-N.txt", separator = "|"))
 }
+
+
+/**
+ * Run this example, using default arguments if none are specified.
+ */
+object FilterUniqueCountLimit {
+  val name = "FilterUniqueCountLimit"
+  val message = "Demonstrate filtering records, finding unique records, counting, and limiting output."
+
+  def main(args: Array[String]) {
+    if (args.length != 0) {
+      Run.run(name, message, args)
+    } else {
+      Run.run(name, message,
+        Array(name, "--local", 
+          "--input", "data/kjvdat.txt", 
+          "--output", "output/kjv"))
+
+      Run.printSomeOutput("output/kjv-skeptic.txt",
+        "Verses filtered to remove miracles (a skeptics KJV...):")
+      Run.printSomeOutput("output/kjv-books.txt",
+        "Unique list of books of the KJV:")
+      Run.printSomeOutput("output/kjv-count-star.txt",
+        "Number of verses in the KJV:")
+      Run.printSomeOutput("output/kjv-limit-N.txt", 
+        "Limit N results:")
+    }
+  }
+}

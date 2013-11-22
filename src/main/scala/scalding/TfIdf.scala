@@ -135,3 +135,25 @@ class TfIdf(args : Args) extends Job(args) {
   def log2(x : Double) = scala.math.log(x)/scala.math.log(2.0)
 }
 
+
+/**
+ * Run this example, using default arguments if none are specified.
+ */
+object TfIdf {
+  val name = "TfIdf"
+  val message = 
+    "Compute term frequency-inverse document frequency on the KJV."
+
+  def main(args: Array[String]) {
+    if (args.length != 0) {
+      Run.run(name, message, args)
+    } else {
+      Run.run(name, message,
+        Array(name, "--local", "--n", "100",
+          "--input", "data/kjvdat.txt", 
+          "--output", "output/kjv-tfidf.txt"))
+
+      Run.printSomeOutput("output/kjv-tfidf.txt")
+    }
+  }
+}

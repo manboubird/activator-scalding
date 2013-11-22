@@ -174,7 +174,7 @@ sup {
 
 <p>Invoke the Activator <em>compile</em> and <em>test</em> commands to build the code and run the unit tests. Compiling will take a few minutes as the dependent libraries are downloaded. The tests should pass without error.</p>
 
-<p>Now you can invoke <em>run</em> to try it out. It runs all four examples provided:</p>
+<p>Now you can invoke <em>run</em> to try it out. The default <code>main</code> class <code>RunAll</code> runs all of the scripts with default arguments. Each script also has its own <code>main</code> routine that you can select in the drop-down menu on the Run panel. The four examples provided are these:</p>
 
 <ul>
 <li><strong>NGrams:</strong> find all N-word ("N-gram") occurrences matching a pattern. In this case, the 4-word phrases in the King James Version of the Bible of the form "% love % %", where the "%" are wild cards. In other words, all 4-grams are found with "love" as the second word. There are 5 such NGrams.</li>
@@ -186,7 +186,7 @@ sup {
 
 <p>Each of these scripts writes output to the <code>output</code> directory, but for convenience, we echo some of output to the Activator window.</p>
 
-<p>Let's examine these scripts next.</p>
+<p>Let's examine these scripts in more detail...</p>
 
 </div>
 
@@ -194,7 +194,11 @@ sup {
 
 <h2>NGrams</h2>
 
-<p>Let's see how the <em>NGrams</em> Script works. Open <a href="#code/src/main/scala/scalding/NGrams.scala">NGrams.scala</a>. Here is the entire script, with the comments removed:</p>
+<p>Let's see how the <em>NGrams</em> Script works. Open <a href="#code/src/main/scala/scalding/NGrams.scala">NGrams.scala</a>.</p>
+
+<p>In the Run panel, select <em>NGrams</em> from the drop-down menu to invoke this script by itself.</p>
+
+<p>Here is the entire script, with the comments removed:</p>
 
 <pre><code>import com.twitter.scalding._
 
@@ -310,6 +314,8 @@ class NGrams(args : Args) extends Job(args) {
 
 <p>To recap, look again at the whole listing above. It's not very big! For what it does and compared to typical code bases you might work with, this is incredibly concise and powerful code.</p>
 
+<p><em>WordCount</em> is next...</p>
+
 </div>
 
 <div>
@@ -319,6 +325,8 @@ class NGrams(args : Args) extends Job(args) {
 <p>Open <a href="#code/src/main/scala/scalding/WordCount.scala">WordCount.scala</a>, which implements the well-known <em>Word Count</em> algorithm, which is popular as an easy-to-implement, "hello world!" program for developers learning Hadoop.</p>
 
 <p>In <em>WordCount</em>, a corpus of documents is read, the contents are tokenized into words, and the total count for each word over the entire corpus is computed. The output is sorted by frequency descending.</p>
+
+<p>In the Run panel, select <em>WordCount</em> from the drop-down menu to invoke this script by itself.</p>
 
 <p>Here is the script without comments:</p>
 
@@ -346,6 +354,8 @@ class WordCount(args : Args) extends Job(args) {
 
 <p>Finally, we write the output <code>'word</code> and <code>'count</code> fields as tab-separated values to the location specified with the <code>--output</code> argument, as for <em>NGrams</em>.</p>
 
+<p><em>FilterUniqueCountLimit</em> is next...</p>
+
 </div>
 
 <div>
@@ -362,6 +372,8 @@ class WordCount(args : Args) extends Job(args) {
 <li>How to limit output (like SQL's <code>LIMIT n</code> clause).</li>
 </ol>
 
+
+<p>In the Run panel, select <em>FilterUniqueCountLimit</em> from the drop-down menu to invoke this script by itself.</p>
 
 <p>Here is the full script without comments:</p>
 
@@ -406,6 +418,8 @@ class FilterUniqueCountLimit(args : Args) extends Job(args) {
 
 <p>The fourth and final pipe limits the number of records to the input value given for the <code>--n</code> argument or 10 if the argument isn't specified. Hence, it's output is just the first n lines of the KJV.</p>
 
+<p><em>TfIdf</em> is our last example script...</p>
+
 </div>
 
 <div>
@@ -413,6 +427,8 @@ class FilterUniqueCountLimit(args : Args) extends Job(args) {
 <h2>TfIdf</h2>
 
 <p>Open <a href="#code/src/main/scala/scalding/TfIdf.scala">TfIdf.scala</a>, our most complex example script. It implements the <em>term frequency-inverse document frequency</em> algorithm used as part of  the indexing process for document or Internet search engines. (See <a href="http://en.wikipedia.org/wiki/Tf*idf">here</a> for more information on this algorithm.)</p>
+
+<p>In the Run panel, select <em>TfIdf</em> from the drop-down menu to invoke this script by itself.</p>
 
 <p>In a conventional implementation of Tf-Idf, you might load a precomputed document to word matrix:</p>
 
@@ -671,6 +687,5 @@ class TfIdf(args : Args) extends Job(args) {
 <li>See <a href="http://typesafe.com/activator">Typesafe Activator</a> to find other Activator templates.</li>
 </ul>
 </div>
-
 </body>
 </html>

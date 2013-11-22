@@ -60,3 +60,25 @@ class WordCount(args : Args) extends Job(args) {
   // tab-delimited values.
     .write(Tsv(args("output")))
 }
+
+
+/**
+ * Run this example, using default arguments if none are specified.
+ */
+object WordCount {
+  val name = "WordCount"
+  val message = "Find and count all the words in the KJV."
+
+  def main(args: Array[String]) {
+    if (args.length != 0) {
+      Run.run(name, message, args)
+    } else {
+      Run.run(name, message,
+        Array(name, "--local", 
+          "--input", "data/kjvdat.txt", 
+          "--output", "output/kjv-wordcount.txt"))
+
+      Run.printSomeOutput("output/kjv-wordcount.txt")
+    }
+  }
+}

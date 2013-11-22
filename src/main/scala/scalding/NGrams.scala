@@ -60,3 +60,24 @@ class NGrams(args : Args) extends Job(args) {
     .debug
     .write(Tsv(args("output")))
 }
+
+/**
+ * Run this example, using default arguments if none are specified.
+ */
+object NGrams {
+  val name = "NGrams"
+  val message = "Find all the 4-grams in the King James Version (KJV) of the bible of the form 'x love x x'."
+
+  def main(args: Array[String]) {
+    if (args.length != 0) {
+      Run.run(name, message, args)
+    } else {
+      Run.run(name, message,
+        Array(name, "--local", "--count", "5", "--ngrams", "% love % %", 
+          "--input", "data/kjvdat.txt", 
+          "--output", "output/kjv-ngrams.txt"))
+
+      Run.printSomeOutput("output/kjv-ngrams.txt")
+    }
+  }
+}

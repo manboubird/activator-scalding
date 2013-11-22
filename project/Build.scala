@@ -115,7 +115,8 @@ object ActivatorScaldingBuild extends Build {
     settings = buildSettings ++ Seq(
       // runScriptSetting, 
       resolvers := allResolvers,
-      libraryDependencies ++= Dependencies.activatorscalding))
+      libraryDependencies ++= Dependencies.activatorscalding,
+      mainClass := Some("RunAll")))
 }
 
 
