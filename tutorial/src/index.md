@@ -8,9 +8,7 @@ This template demonstrates how to build and run [Scalding](https://github.com/tw
 
 ## Building and Running
 
-Invoke the Activator *compile* and *test* commands to build the code and run the unit tests. Compiling will take a few minutes as the dependent libraries are downloaded. The tests should pass without error.
-
-Now you can invoke *run* to try it out. The default `main` class `RunAll` runs all of the scripts with default arguments. Each script also has its own `main` routine that you can select in the drop-down menu on the Run panel. The four examples provided are these:
+Invoke <a class="shortcut" href="#run">run</a> to try it out. The default `main` class `RunAll` runs all of the scripts with default arguments. Each script also has its own `main` routine that you can select in the drop-down menu on the Run panel. The four examples provided are these:
 
 * **NGrams:** find all N-word ("N-gram") occurrences matching a pattern. In this case, the 4-word phrases in the King James Version of the Bible of the form "% love % %", where the "%" are wild cards. In other words, all 4-grams are found with "love" as the second word. There are 5 such NGrams.
 * **WordCount:** find all the words in a corpus of documents and count them, again using the KJV.
@@ -23,7 +21,7 @@ Let's examine these scripts in more detail...
 
 ## NGrams
 
-Let's see how the *NGrams* Script works. Open <a href="#code/src/main/scala/scalding/NGrams.scala">NGrams.scala</a>. 
+Let's see how the *NGrams* Script works. Open <a class="shortcut" href="#code/src/main/scala/scalding/NGrams.scala">NGrams.scala</a>. 
 
 In the Run panel, select *NGrams* from the drop-down menu to invoke this script by itself.
 
@@ -159,7 +157,7 @@ To recap, look again at the whole listing above. It's not very big! For what it 
 
 ## WordCount
 
-Open <a href="#code/src/main/scala/scalding/WordCount.scala">WordCount.scala</a>, which implements the well-known *Word Count* algorithm, which is popular as an easy-to-implement, "hello world!" program for developers learning Hadoop.
+Open <a class="shortcut" href="#code/src/main/scala/scalding/WordCount.scala">WordCount.scala</a>, which implements the well-known *Word Count* algorithm, which is popular as an easy-to-implement, "hello world!" program for developers learning Hadoop.
 
 In *WordCount*, a corpus of documents is read, the contents are tokenized into words, and the total count for each word over the entire corpus is computed. The output is sorted by frequency descending.
 
@@ -196,7 +194,7 @@ Finally, we write the output `'word` and `'count` fields as tab-separated values
 
 ## FilterUniqueCountLimit
 
-Open <a href="#code/src/main/scala/scalding/FilterUniqueCountLimit.scala">FilterUniqueCountLimit.scala</a>, which shows a few useful techniques:
+Open <a class="shortcut" href="#code/src/main/scala/scalding/FilterUniqueCountLimit.scala">FilterUniqueCountLimit.scala</a>, which shows a few useful techniques:
 
 1. How to split a data stream into several flows, each for a specific calculation.
 2. How to filter records (like SQL's `WHERE` clause).
@@ -254,7 +252,7 @@ The fourth and final pipe limits the number of records to the input value given 
 
 ## TfIdf
 
-Open <a href="#code/src/main/scala/scalding/TfIdf.scala">TfIdf.scala</a>, our most complex example script. It implements the *term frequency-inverse document frequency* algorithm used as part of  the indexing process for document or Internet search engines. (See [here](http://en.wikipedia.org/wiki/Tf*idf) for more information on this algorithm.)
+Open <a class="shortcut" href="#code/src/main/scala/scalding/TfIdf.scala">TfIdf.scala</a>, our most complex example script. It implements the *term frequency-inverse document frequency* algorithm used as part of  the indexing process for document or Internet search engines. (See [this Wikipedia page](http://en.wikipedia.org/wiki/Tf*idf) for more information on this algorithm.)
 
 In the Run panel, select *TfIdf* from the drop-down menu to invoke this script by itself.
 
@@ -364,15 +362,15 @@ After joining, we do a final projection and then write the output as before.
 
 ## Next Steps
 
-Now you have run these four Scalding scripts and seen what they do. There are additional capabilities built into this Activator template. If you know how to use [sbt](http://www.scala-sbt.org/), the standard Scala build tool, then proceed to the next sections of this tutorial for more information.
+There are additional capabilities built into this Activator template that you can access from a command line using the `activator` command or [sbt](http://www.scala-sbt.org/), the standard Scala build tool. Let's explore those features.
 
-## Running Locally with SBT
+## Running Locally with the Command Line
 
-In a command window, start `sbt`. At the prompt, invoke the `test` and `run` tasks, which are the same tasks we ran in Activator, to ensure they complete successfully. 
+In a command window, run `activator` (or `sbt`). At the prompt, invoke the `test` and `run` tasks, which are the same tasks we ran in Activator, to ensure they complete successfully. 
 
 All four examples take command-line arguments to customize their behavior. The *NGrams* example is particular interesting to play with, where you search for different phrases in the Bible or some other text file of interest to you. 
 
-You can run then within `sbt`. At the `sbt` prompt, type `scalding`. You'll see the following:
+At the `activator` prompt, type `scalding`. You'll see the following:
 
 ```
 > scalding
@@ -392,7 +390,7 @@ Let's look at each example. Recall that all the scripts are in `src/main/scala/s
 
 ## NGrams
 
-You invoke the *NGrams* script inside `sbt` like this:
+You invoke the *NGrams* script inside `activator` like this:
 
 ```
 scalding NGrams --count 20 --ngrams "I love % %" --input data/kjvdat.txt --output output/kjv-ngrams.txt
@@ -414,7 +412,7 @@ This example also uses the `debug` pipe to dump output to the console. In this c
 
 ## WordCount
 
-You invoke the script inside `sbt` like this:
+You invoke the script inside `activator` like this:
 
 ```
 scalding WordCount --input data/kjvdat.txt --output output/kjv-wc.txt
@@ -434,11 +432,11 @@ Gen|1|1| In the beginning God created the heaven and the earth.~
 
 We just treat the whole line as text. A nice exercise is to *project* out just the `text` field. See the other scripts for examples of how to do this.
 
-The `--output` argument specifies where the results are written. You just see a few log messages written to the `sbt` console. You can use any path you want for this output.
+The `--output` argument specifies where the results are written. You just see a few log messages written to the `activator` console. You can use any path you want for this output.
 
 ## FilterUniqueCountLimit
 
-You invoke the script inside `sbt` like this:
+You invoke the script inside `activator` like this:
 
 ```
 scalding FilterUniqueCountLimit --input data/kjvdat.txt --output output/kjv
@@ -448,7 +446,7 @@ In this case, the `--output` is actually used as a prefix for the four output fi
 
 ## TfIDf
  
-You invoke the script inside `sbt` like this:
+You invoke the script inside `activator` like this:
 
 ```
 scalding TfIdf --n 100 --input data/kjvdat.txt --output output/kjv-tfidf.txt
@@ -461,7 +459,7 @@ The `--n` argument is optional; it defaults to 100. It specifies how many words 
 
 After testing your scripts, you can run them on a Hadoop cluster. You'll first need to build an all-inclusive jar file that contains all the dependencies, including the Scala standard library, that aren't already on the cluster.
 
-The `sbt assembly` command first runs an `update` task, if missing dependencies need to be downloaded. Then the task builds the all-inclusive jar file, which is written to `target/scala-2.10/activator-scalding-X.Y.Z.jar`, where `X.Y.Z` will be the current version number for this project.
+The `activator assembly` command first runs an `update` task, if missing dependencies need to be downloaded. Then the task builds the all-inclusive jar file, which is written to `target/scala-2.10/activator-scalding-X.Y.Z.jar`, where `X.Y.Z` will be the current version number for this project.
 
 One the jar is built and assuming you have the `hadoop` command installed on your system (or the server to which you copy the jar file...), the following command syntax will run one of the scripts
 

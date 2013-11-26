@@ -172,9 +172,7 @@ sup {
 
 <h2>Building and Running</h2>
 
-<p>Invoke the Activator <em>compile</em> and <em>test</em> commands to build the code and run the unit tests. Compiling will take a few minutes as the dependent libraries are downloaded. The tests should pass without error.</p>
-
-<p>Now you can invoke <em>run</em> to try it out. The default <code>main</code> class <code>RunAll</code> runs all of the scripts with default arguments. Each script also has its own <code>main</code> routine that you can select in the drop-down menu on the Run panel. The four examples provided are these:</p>
+<p>Invoke <a class="shortcut" href="#run">run</a> to try it out. The default <code>main</code> class <code>RunAll</code> runs all of the scripts with default arguments. Each script also has its own <code>main</code> routine that you can select in the drop-down menu on the Run panel. The four examples provided are these:</p>
 
 <ul>
 <li><strong>NGrams:</strong> find all N-word ("N-gram") occurrences matching a pattern. In this case, the 4-word phrases in the King James Version of the Bible of the form "% love % %", where the "%" are wild cards. In other words, all 4-grams are found with "love" as the second word. There are 5 such NGrams.</li>
@@ -194,7 +192,7 @@ sup {
 
 <h2>NGrams</h2>
 
-<p>Let's see how the <em>NGrams</em> Script works. Open <a href="#code/src/main/scala/scalding/NGrams.scala">NGrams.scala</a>.</p>
+<p>Let's see how the <em>NGrams</em> Script works. Open <a class="shortcut" href="#code/src/main/scala/scalding/NGrams.scala">NGrams.scala</a>.</p>
 
 <p>In the Run panel, select <em>NGrams</em> from the drop-down menu to invoke this script by itself.</p>
 
@@ -322,7 +320,7 @@ class NGrams(args : Args) extends Job(args) {
 
 <h2>WordCount</h2>
 
-<p>Open <a href="#code/src/main/scala/scalding/WordCount.scala">WordCount.scala</a>, which implements the well-known <em>Word Count</em> algorithm, which is popular as an easy-to-implement, "hello world!" program for developers learning Hadoop.</p>
+<p>Open <a class="shortcut" href="#code/src/main/scala/scalding/WordCount.scala">WordCount.scala</a>, which implements the well-known <em>Word Count</em> algorithm, which is popular as an easy-to-implement, "hello world!" program for developers learning Hadoop.</p>
 
 <p>In <em>WordCount</em>, a corpus of documents is read, the contents are tokenized into words, and the total count for each word over the entire corpus is computed. The output is sorted by frequency descending.</p>
 
@@ -362,7 +360,7 @@ class WordCount(args : Args) extends Job(args) {
 
 <h2>FilterUniqueCountLimit</h2>
 
-<p>Open <a href="#code/src/main/scala/scalding/FilterUniqueCountLimit.scala">FilterUniqueCountLimit.scala</a>, which shows a few useful techniques:</p>
+<p>Open <a class="shortcut" href="#code/src/main/scala/scalding/FilterUniqueCountLimit.scala">FilterUniqueCountLimit.scala</a>, which shows a few useful techniques:</p>
 
 <ol>
 <li>How to split a data stream into several flows, each for a specific calculation.</li>
@@ -426,7 +424,7 @@ class FilterUniqueCountLimit(args : Args) extends Job(args) {
 
 <h2>TfIdf</h2>
 
-<p>Open <a href="#code/src/main/scala/scalding/TfIdf.scala">TfIdf.scala</a>, our most complex example script. It implements the <em>term frequency-inverse document frequency</em> algorithm used as part of  the indexing process for document or Internet search engines. (See <a href="http://en.wikipedia.org/wiki/Tf*idf">here</a> for more information on this algorithm.)</p>
+<p>Open <a class="shortcut" href="#code/src/main/scala/scalding/TfIdf.scala">TfIdf.scala</a>, our most complex example script. It implements the <em>term frequency-inverse document frequency</em> algorithm used as part of  the indexing process for document or Internet search engines. (See <a href="http://en.wikipedia.org/wiki/Tf*idf">this Wikipedia page</a> for more information on this algorithm.)</p>
 
 <p>In the Run panel, select <em>TfIdf</em> from the drop-down menu to invoke this script by itself.</p>
 
@@ -537,19 +535,19 @@ class TfIdf(args : Args) extends Job(args) {
 
 <h2>Next Steps</h2>
 
-<p>Now you have run these four Scalding scripts and seen what they do. There are additional capabilities built into this Activator template. If you know how to use <a href="http://www.scala-sbt.org/">sbt</a>, the standard Scala build tool, then proceed to the next sections of this tutorial for more information.</p>
+<p>There are additional capabilities built into this Activator template that you can access from a command line using the <code>activator</code> command or <a href="http://www.scala-sbt.org/">sbt</a>, the standard Scala build tool. Let's explore those features.</p>
 
 </div>
 
 <div>
 
-<h2>Running Locally with SBT</h2>
+<h2>Running Locally with the Command Line</h2>
 
-<p>In a command window, start <code>sbt</code>. At the prompt, invoke the <code>test</code> and <code>run</code> tasks, which are the same tasks we ran in Activator, to ensure they complete successfully.</p>
+<p>In a command window, run <code>activator</code> (or <code>sbt</code>). At the prompt, invoke the <code>test</code> and <code>run</code> tasks, which are the same tasks we ran in Activator, to ensure they complete successfully.</p>
 
 <p>All four examples take command-line arguments to customize their behavior. The <em>NGrams</em> example is particular interesting to play with, where you search for different phrases in the Bible or some other text file of interest to you.</p>
 
-<p>You can run then within <code>sbt</code>. At the <code>sbt</code> prompt, type <code>scalding</code>. You'll see the following:</p>
+<p>At the <code>activator</code> prompt, type <code>scalding</code>. You'll see the following:</p>
 
 <pre><code>&gt; scalding
 [error] Please specify one of the following commands (example arguments shown):
@@ -572,7 +570,7 @@ class TfIdf(args : Args) extends Job(args) {
 
 <h2>NGrams</h2>
 
-<p>You invoke the <em>NGrams</em> script inside <code>sbt</code> like this:</p>
+<p>You invoke the <em>NGrams</em> script inside <code>activator</code> like this:</p>
 
 <pre><code>scalding NGrams --count 20 --ngrams "I love % %" --input data/kjvdat.txt --output output/kjv-ngrams.txt
 </code></pre>
@@ -597,7 +595,7 @@ class TfIdf(args : Args) extends Job(args) {
 
 <h2>WordCount</h2>
 
-<p>You invoke the script inside <code>sbt</code> like this:</p>
+<p>You invoke the script inside <code>activator</code> like this:</p>
 
 <pre><code>scalding WordCount --input data/kjvdat.txt --output output/kjv-wc.txt
 </code></pre>
@@ -614,7 +612,7 @@ class TfIdf(args : Args) extends Job(args) {
 
 <p>We just treat the whole line as text. A nice exercise is to <em>project</em> out just the <code>text</code> field. See the other scripts for examples of how to do this.</p>
 
-<p>The <code>--output</code> argument specifies where the results are written. You just see a few log messages written to the <code>sbt</code> console. You can use any path you want for this output.</p>
+<p>The <code>--output</code> argument specifies where the results are written. You just see a few log messages written to the <code>activator</code> console. You can use any path you want for this output.</p>
 
 </div>
 
@@ -622,7 +620,7 @@ class TfIdf(args : Args) extends Job(args) {
 
 <h2>FilterUniqueCountLimit</h2>
 
-<p>You invoke the script inside <code>sbt</code> like this:</p>
+<p>You invoke the script inside <code>activator</code> like this:</p>
 
 <pre><code>scalding FilterUniqueCountLimit --input data/kjvdat.txt --output output/kjv
 </code></pre>
@@ -635,7 +633,7 @@ class TfIdf(args : Args) extends Job(args) {
 
 <h2>TfIDf</h2>
 
-<p>You invoke the script inside <code>sbt</code> like this:</p>
+<p>You invoke the script inside <code>activator</code> like this:</p>
 
 <pre><code>scalding TfIdf --n 100 --input data/kjvdat.txt --output output/kjv-tfidf.txt
 </code></pre>
@@ -650,7 +648,7 @@ class TfIdf(args : Args) extends Job(args) {
 
 <p>After testing your scripts, you can run them on a Hadoop cluster. You'll first need to build an all-inclusive jar file that contains all the dependencies, including the Scala standard library, that aren't already on the cluster.</p>
 
-<p>The <code>sbt assembly</code> command first runs an <code>update</code> task, if missing dependencies need to be downloaded. Then the task builds the all-inclusive jar file, which is written to <code>target/scala-2.10/activator-scalding-X.Y.Z.jar</code>, where <code>X.Y.Z</code> will be the current version number for this project.</p>
+<p>The <code>activator assembly</code> command first runs an <code>update</code> task, if missing dependencies need to be downloaded. Then the task builds the all-inclusive jar file, which is written to <code>target/scala-2.10/activator-scalding-X.Y.Z.jar</code>, where <code>X.Y.Z</code> will be the current version number for this project.</p>
 
 <p>One the jar is built and assuming you have the <code>hadoop</code> command installed on your system (or the server to which you copy the jar file...), the following command syntax will run one of the scripts</p>
 
