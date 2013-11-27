@@ -386,7 +386,11 @@ Hence, without providing any arguments, the `scalding` command tells you which s
 
 Each command should run without error and the output will be written to the file indicated by the `--output` option. You can change the output location to be anything you want.
 
-Let's look at each example. Recall that all the scripts are in `src/main/scala/scalding`. You should look at the files for detailed comments on how they are implemented.
+Also, if you want to understand how Cascading converts each script into a MapReduce dataflow, Cascading has a feature that generates graphs of the dataflow in the [dot](http://en.wikipedia.org/wiki/DOT_(graph_description_language)) graph format. You can view these files with many tools, including the free [Graphviz](http://www.graphviz.org/).
+
+To generate these files, you can add the argument `--tool.graph` to the end of any script command we discuss in subsequent sections. Instead of running the job, the Cascading runtime will write one or more "dot" files to the project root directory.
+
+Now let's look at each example. Recall that all the scripts are in `src/main/scala/scalding`. You should look at the files for detailed comments on how they are implemented.
 
 ## NGrams
 

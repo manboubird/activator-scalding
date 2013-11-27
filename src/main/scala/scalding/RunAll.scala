@@ -30,8 +30,9 @@ object Run {
   def run(name: String, message: String, args: Array[String]) = {
     println(s"\n==== $name " + ("===" * 20))
     println(message)
-    println(s"Running: ${args.mkString(" ")}")
-		ToolRunner.run(new Configuration, new Tool, args)
+    val argsWithName = name +: args
+    println(s"Running: ${argsWithName.mkString(" ")}")
+		ToolRunner.run(new Configuration, new Tool, argsWithName)
   }
 
   def printSomeOutput(outputFileName: String, message: String = "") = {

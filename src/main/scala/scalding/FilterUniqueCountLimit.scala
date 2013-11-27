@@ -81,7 +81,7 @@ object FilterUniqueCountLimit {
       Run.run(name, message, args)
     } else {
       Run.run(name, message,
-        Array(name, "--local", 
+        Array("--local", 
           "--input", "data/kjvdat.txt", 
           "--output", "output/kjv"))
 

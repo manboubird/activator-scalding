@@ -562,7 +562,11 @@ class TfIdf(args : Args) extends Job(args) {
 
 <p>Each command should run without error and the output will be written to the file indicated by the <code>--output</code> option. You can change the output location to be anything you want.</p>
 
-<p>Let's look at each example. Recall that all the scripts are in <code>src/main/scala/scalding</code>. You should look at the files for detailed comments on how they are implemented.</p>
+<p>Also, if you want to understand how Cascading converts each script into a MapReduce dataflow, Cascading has a feature that generates graphs of the dataflow in the <a href="http://en.wikipedia.org/wiki/DOT_(graph_description_language)">dot</a> graph format. You can view these files with many tools, including the free <a href="http://www.graphviz.org/">Graphviz</a>.</p>
+
+<p>To generate these files, you can add the argument <code>--tool.graph</code> to the end of any script command we discuss in subsequent sections. Instead of running the job, the Cascading runtime will write one or more "dot" files to the project root directory.</p>
+
+<p>Now let's look at each example. Recall that all the scripts are in <code>src/main/scala/scalding</code>. You should look at the files for detailed comments on how they are implemented.</p>
 
 </div>
 

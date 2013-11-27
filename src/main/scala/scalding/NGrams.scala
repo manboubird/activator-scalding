@@ -73,7 +73,7 @@ object NGrams {
       Run.run(name, message, args)
     } else {
       Run.run(name, message,
-        Array(name, "--local", "--count", "5", "--ngrams", "% love % %", 
+        Array("--local", "--count", "5", "--ngrams", "% love % %", 
           "--input", "data/kjvdat.txt", 
           "--output", "output/kjv-ngrams.txt"))
 

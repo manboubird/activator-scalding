@@ -149,7 +149,7 @@ object TfIdf {
       Run.run(name, message, args)
     } else {
       Run.run(name, message,
-        Array(name, "--local", "--n", "100",
+        Array("--local", "--n", "100",
           "--input", "data/kjvdat.txt", 
           "--output", "output/kjv-tfidf.txt"))
 
