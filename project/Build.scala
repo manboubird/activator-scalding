@@ -67,16 +67,21 @@ object Resolvers {
   val conjars  = "Concurrent Maven Repo" at "http://conjars.org/repo"
   val clojars  = "Clojars Repo" at "http://clojars.org/repo"
   val twitterMaven = "Twitter Maven" at "http://maven.twttr.com"
-  
-  val allResolvers = Seq(typesafe, sonatype, mvnrepository, conjars, clojars, twitterMaven)
+  val cloudera = "Cloudera" at "https://repository.cloudera.com/artifactory/cloudera-repos/"
+  val local = Resolver.file("local-ivy", file(Path.userHome.absolutePath + "/.ivy2/local")) transactional()
+  val allResolvers = Seq(typesafe, sonatype, mvnrepository, conjars, clojars, twitterMaven
+      , cloudera, local)
 
 }
 
 object Dependency {
   object Version {
-    val Scalding  = "0.9.0rc4"
+//    val Scalding  = "0.9.0rc4"
+    val Scalding  = "0.11.2-mr1-cdh4.5.0"
     val Algebird  = "0.2.0"
-    val Hadoop    = "1.1.2"  // Fairly old, but reliable version. Substitute your "favorite"
+//    val Hadoop    = "1.1.2"  // Fairly old, but reliable version. Substitute your "favorite"
+    val Hadoop    = "2.0.0-cdh4.5.0"  // Fairly old, but reliable version. Substitute your "favorite"
+    val HadoopMr1 = "2.0.0-mr1-cdh4.5.0"  // Fairly old, but reliable version. Substitute your "favorite"
     val ScalaTest = "2.0"
   }
 
@@ -91,7 +96,8 @@ object Dependency {
   val algebird_core  = "com.twitter"    %% "algebird-core"  % Version.Algebird
   val algebird_util  = "com.twitter"    %% "algebird-util"  % Version.Algebird
 
-  val hadoop_core    = "org.apache.hadoop" % "hadoop-core"  % Version.Hadoop
+  val hadoop_core    = "org.apache.hadoop" % "hadoop-core"  % Version.HadoopMr1
+  val hadoop_common    = "org.apache.hadoop" % "hadoop-common" % Version.Hadoop
 
   val scalaTest      = "org.scalatest"     % "scalatest_2.10" % Version.ScalaTest %  "test" 
 }
@@ -101,7 +107,7 @@ object Dependencies {
 
   val activatorscalding = Seq(
     scalaCompiler, scalding_args, scalding_core, scalding_date, 
-    algebird_core, algebird_util, hadoop_core, scalaTest)
+    algebird_core, algebird_util, hadoop_core, hadoop_common, scalaTest)
 }
 
 object ActivatorScaldingBuild extends Build {
@@ -118,6 +124,3 @@ object ActivatorScaldingBuild extends Build {
       libraryDependencies ++= Dependencies.activatorscalding,
       mainClass := Some("RunAll")))
 }
-
-
-
